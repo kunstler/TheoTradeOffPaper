@@ -1,0 +1,168 @@
+packages:
+  - rmarkdown
+  - RColorBrewer
+  - raster
+  - gtools
+  - dplyr
+  - TheoTradeOff
+  - reldist
+
+sources:
+  - R
+
+plot_options:
+  tall:
+    height: 6.5
+    width: 5.5
+  wide:
+    height: 5
+    width: 10
+  skinny:
+    height: 4.5
+    width: 3
+  square:
+    height: 5.5
+    width: 5.5
+  large_square:
+    height: 7
+    width: 7
+
+knitr_options:
+  vignette:
+    auto_figure_prefix: true
+    chdir: true
+
+targets:
+  all:
+    depends:
+      - ms/ideas.pdf
+
+  ms/ideas.pdf:
+    depends:
+      - ms/ms.sty
+      - ms/amnat.bst
+    command: latex_build("ms/ideas.tex", "ms/references.bib", clean=TRUE)
+
+
+  slides.pdf:
+    command: xelatex_build_clean("slides.tex")
+
+
+  figures_theo:
+    depends:
+    - figures/resLV_1.pdf
+    - figures/resLV_2.pdf
+    - figures/resLV_0a.pdf
+    - figures/resLV_0b.pdf
+    - figures/map_theo_K100.pdf
+    - figures/map_theo_K10.pdf
+    - figures/map_theo_K5.pdf
+    - figures/map_theo_K1.pdf
+    - figures/mean_ce_theo_K100.pdf
+    - figures/mean_ce_theo_K10.pdf
+    - figures/mean_ce_theo_K5.pdf
+    - figures/mean_ce_theo_K1.pdf
+    - figures/range_theo_K100.pdf
+    - figures/range_theo_K10.pdf
+    - figures/range_theo_K5.pdf
+    - figures/range_theo_K1.pdf
+
+# Simulation results and figures ###################################################
+
+#### LV for intro
+  figures/resLV_0a.pdf:
+    command: plot_intro_fig_0a(df_pred)
+
+  figures/resLV_0b.pdf:
+    command: plot_intro_fig_0b(df_pred)
+
+  figures/resLV_1.pdf:
+    command: plot_intro_fig_1(df_pred)
+
+  figures/resLV_2.pdf:
+    command: plot_intro_fig_2(df_pred)
+
+  df_pred:
+    command: data_intro_fig()
+
+### TheoTradeOff
+
+  figures/ternplot.pdf:
+    command: TernPlotSp(add_text = TRUE)
+    plot: square
+
+  list_init:
+    command: generate_init()
+
+  l_res_K100:
+    command: run_K(list_init, I(K = 100))
+
+  l_res_K10:
+    command: run_K(list_init, I(K = 10))
+
+  l_res_K5:
+    command: run_K(list_init, I(K = 5))
+
+  l_res_K1:
+    command: run_K(list_init, I(K = 1))
+
+  figures/map_theo_K100.pdf:
+    command: plot_map(l_res_K100, list_init, I(val_K = 100))
+    plot: wide
+
+  figures/map_theo_K10.pdf:
+    command: plot_map(l_res_K10, list_init, I(val_K = 10))
+    plot: wide
+
+  figures/map_theo_K5.pdf:
+    command: plot_map(l_res_K5, list_init, I(val_K = 5))
+    plot: wide
+
+  figures/map_theo_K1.pdf:
+    command: plot_map(l_res_K1, list_init, I(val_K = 1))
+    plot: wide
+
+  figures/mean_ce_theo_K100.pdf:
+    command: plot_mean_param(l_res_K100, list_init)
+    plot: wide
+
+  figures/mean_ce_theo_K10.pdf:
+    command: plot_mean_param(l_res_K10, list_init)
+    plot: wide
+
+  figures/mean_ce_theo_K5.pdf:
+    command: plot_mean_param(l_res_K5, list_init)
+    plot: wide
+
+  figures/mean_ce_theo_K1.pdf:
+    command: plot_mean_param(l_res_K1, list_init)
+    plot: wide
+
+  data_range_K100:
+    command: generate_data_sp_ranges(l_res_K100)
+
+  figures/range_theo_K100.pdf:
+    command: plot_range(data_range_K100)
+    plot: wide
+
+  data_range_K10:
+    command: generate_data_sp_ranges(l_res_K10)
+
+  figures/range_theo_K10.pdf:
+    command: plot_range(data_range_K10)
+    plot: wide
+
+  data_range_K5:
+    command: generate_data_sp_ranges(l_res_K5)
+
+  figures/range_theo_K5.pdf:
+    command: plot_range(data_range_K5)
+    plot: wide
+
+  data_range_K1:
+    command: generate_data_sp_ranges(l_res_K1)
+
+  figures/range_theo_K1.pdf:
+    command: plot_range(data_range_K1)
+    plot: wide
+
